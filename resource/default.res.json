@@ -1,0 +1,35 @@
+{
+	"groups": [
+		{
+			"keys": "description_json,joystick_png,joystick_bg_png,game_player_png,game_bg_png",
+			"name": "preload"
+		}
+	],
+	"resources": [
+		{
+			"url": "assets/game_bg.png",
+			"type": "image",
+			"name": "game_bg_png"
+		},
+		{
+			"url": "assets/game_player.png",
+			"type": "image",
+			"name": "game_player_png"
+		},
+		{
+			"url": "assets/joystick.png",
+			"type": "image",
+			"name": "joystick_png"
+		},
+		{
+			"url": "assets/joystick_bg.png",
+			"type": "image",
+			"name": "joystick_bg_png"
+		},
+		{
+			"url": "config/description.json",
+			"type": "json",
+			"name": "description_json"
+		}
+	]
+}
