@@ -18,72 +18,94 @@ r.prototype = e.prototype, t.prototype = new r();
 var Joystick = (function (_super) {
     __extends(Joystick, _super);
     function Joystick() {
-        return _super.call(this) || this;
+        var _this = _super.call(this) || this;
+        _this.active = false; //是否激活
+        return _this;
     }
     Joystick.prototype.createChildren = function () {
         this.skinName = "JoystickSkin";
-        this.sensor.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBegin, this);
+        // this.stage.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBegin, this);
+        // this.sensor.touchThrough = true;
         // this.joystick.stage.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
         // this.joystick.stage.addEventListener(egret.TouchEvent.TOUCH_RELEASE_OUTSIDE, this.onTouchOutside, this);
         // this.joystick.stage.addEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this);
         // this.joystick.stage.addEventListener(egret.TouchEvent.TOUCH_CANCEL, this.onTouchCanel, this);
         this.defaultAlpha = 0.3;
-        this.defaultPoint = new egret.Point(this.joyGroup.x, this.joyGroup.y);
+        this.defaultPoint = new egret.Point(this.x, this.y);
         this.joyDefaultPoint = new egret.Point(this.joystick.x, this.joystick.y);
         this.joyStartPoint = new egret.Point();
         this.joyMovePoint = new egret.Point();
+        this.radius = this.joystickBg.width / 2;
     };
     /** 设置摇杆的位置 */
-    Joystick.prototype.setJoyPosition = function (point) {
-        this.joyGroup.x = point.x;
-        this.joyGroup.y = point.y;
-        this.defaultPoint.x = this.joyGroup.x;
-        this.defaultPoint.y = this.joyGroup.y;
-    };
-    Joystick.prototype.onTouchBegin = function (event) {
-        console.log(" ===== onJoystickTouchBegin ===== ");
+    // public setJoyPosition(point: egret.Point)
+    // {
+    //     this.joyGroup.x = point.x;
+    //     this.joyGroup.y = point.y;
+    //     this.defaultPoint.x = this.joyGroup.x;
+    //     this.defaultPoint.y = this.joyGroup.y;
+    // }
+    Joystick.prototype.enable = function (event) {
+        if (this.active)
+            return;
+        this.active = true;
+        this.touchID = event.touchPointID;
         this.joyStartPoint.x = event.stageX, this.joyStartPoint.y = event.stageY;
-        this.joyGroup.alpha = 1;
-        var point = new egret.Point(); //申请一个点做世界转局部的存储变量
-        this.globalToLocal(event.stageX, event.stageY, point);
-        this.joyGroup.x = point.x;
-        this.joyGroup.y = point.y;
-        this.sensor.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
-        this.sensor.addEventListener(egret.TouchEvent.TOUCH_RELEASE_OUTSIDE, this.onTouchOutside, this);
-        this.sensor.addEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this);
+        this.stage.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
+        this.stage.addEventListener(egret.TouchEvent.TOUCH_RELEASE_OUTSIDE, this.onTouchOutside, this);
+        this.stage.addEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this);
     };
     Joystick.prototype.onTouchMove = function (event) {
-        console.log(" ===== onJoystickTouchMove ===== ");
+        if (event.touchPointID != this.touchID)
+            return;
+        // console.log(" ===== onJoystickTouchMove ===== ");
         this.joyMovePoint.x = event.stageX;
         this.joyMovePoint.y = event.stageY;
+        var distance = egret.Point.distance(this.joyStartPoint, this.joyMovePoint);
+        // if(distance <= this.radius)//在半径内
+        // {
+        //     this.joystick.x = this.joyDefaultPoint.x + this.joyMovePoint.x - this.joyStartPoint.x;
+        //     this.joystick.y = this.joyDefaultPoint.y + this.joyMovePoint.y - this.joyStartPoint.y;
+        // }
+        // else//在半径外
+        // {
+        //     //joyStartPoint 和 joyMovePoint 是绝对坐标
+        //     let point = egret.Point.interpolate(this.joyStartPoint, this.joyMovePoint, this.radius / distance);
+        //     point = this.globalToLocal(point.x, point.y);
+        //     let tmpPoint = this.globalToLocal(this.joyStartPoint.x, this.joyStartPoint.y);
+        //     this.joystick.x = point.x - tmpPoint.x;
+        //     this.joystick.y = point.y - tmpPoint.y;
+        // }
         this.joystick.x = this.joyDefaultPoint.x + this.joyMovePoint.x - this.joyStartPoint.x;
         this.joystick.y = this.joyDefaultPoint.y + this.joyMovePoint.y - this.joyStartPoint.y;
     };
     Joystick.prototype.onTouchOutside = function (event) {
-        console.log(" ===== onJoystickTouchOutside ===== ");
-        this.joyGroup.alpha = this.defaultAlpha;
-        this.touchEnabled = false;
-        this.joyGroup.x = this.defaultPoint.x;
-        this.joyGroup.y = this.defaultPoint.y;
-        this.joystick.x = this.joyDefaultPoint.x;
-        this.joystick.y = this.joyDefaultPoint.y;
-        this.sensor.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
-        this.sensor.removeEventListener(egret.TouchEvent.TOUCH_RELEASE_OUTSIDE, this.onTouchOutside, this);
-        this.sensor.removeEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this);
+        if (event.touchPointID != this.touchID)
+            return;
+        // console.log(" ===== onJoystickTouchOutside ===== ");
+        this.touchEnd();
     };
     Joystick.prototype.onTouchEnd = function (event) {
-        console.log(" ===== onJoystickTouchEnd ===== ");
-        this.joyGroup.alpha = this.defaultAlpha;
+        if (event.touchPointID != this.touchID)
+            return;
+        // console.log(" ===== onJoystickTouchEnd ===== ");
+        this.touchEnd();
+    };
+    /** 当触摸结束时的处理工作 */
+    Joystick.prototype.touchEnd = function () {
+        this.active = false;
+        this.alpha = this.defaultAlpha;
         this.touchEnabled = false;
-        this.joyGroup.x = this.defaultPoint.x;
-        this.joyGroup.y = this.defaultPoint.y;
+        this.x = this.defaultPoint.x;
+        this.y = this.defaultPoint.y;
         this.joystick.x = this.joyDefaultPoint.x;
         this.joystick.y = this.joyDefaultPoint.y;
-        this.sensor.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
-        this.sensor.removeEventListener(egret.TouchEvent.TOUCH_RELEASE_OUTSIDE, this.onTouchOutside, this);
-        this.sensor.removeEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this);
+        this.stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
+        this.stage.removeEventListener(egret.TouchEvent.TOUCH_RELEASE_OUTSIDE, this.onTouchOutside, this);
+        this.stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this);
     };
     return Joystick;
 }(eui.Component));
 __reflect(Joystick.prototype, "Joystick");
+window["Joystick"] = Joystick;
 //# sourceMappingURL=Joystick.js.map

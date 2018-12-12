@@ -25,27 +25,33 @@ var GameView = (function (_super) {
         return _this;
     }
     GameView.prototype.createChildren = function () {
-        // this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBegin, this);
+        this.stage.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBegin, this);
         _super.prototype.createChildren.call(this);
-        this.createJoystick();
     };
-    /** 创建摇杆 */
-    GameView.prototype.createJoystick = function () {
-        this.joystickL = new Joystick();
-        this.joystickR = new Joystick();
-        this.joystickL.width = Main.stageWid / 2;
-        this.joystickL.height = Main.stageHei;
-        this.addChild(this.joystickL);
-        this.joystickR.x = Main.stageWid / 2;
-        this.joystickR.width = Main.stageWid / 2;
-        this.joystickR.height = Main.stageHei;
-        this.addChild(this.joystickR);
-        var point = new egret.Point(50 + this.joystickL.joyGroup.anchorOffsetX, Main.stageHei - this.joystickL.joyGroup.height + this.joystickL.joyGroup.anchorOffsetY - 50);
-        this.joystickL.setJoyPosition(this.joystickL.globalToLocal(point.x, point.y));
-        point = new egret.Point(Main.stageWid - this.joystickR.joyGroup.anchorOffsetX - 50, this.joystickL.joyGroup.y);
-        this.joystickR.setJoyPosition(this.joystickR.globalToLocal(point.x, point.y));
+    GameView.prototype.onTouchBegin = function (event) {
+        var touchPoint = new egret.Point(event.stageX, event.stageY);
+        if (touchPoint.x < Main.stageWid / 2) {
+            if (this.joystickL.active)
+                return;
+            console.log(" ===== onViewTouchBegin left ===== ");
+            this.joystickL.x = touchPoint.x;
+            this.joystickL.y = touchPoint.y;
+            this.joystickL.alpha = 1;
+            this.joystickL.enable(event);
+        }
+        else {
+            if (this.joystickR.active)
+                return;
+            console.log(" ===== onViewTouchBegin right ===== ");
+            this.joystickR.x = touchPoint.x;
+            this.joystickR.y = touchPoint.y;
+            this.joystickR.alpha = 1;
+            this.joystickR.enable(event);
+        }
+        this.touchEnabled = false;
     };
     return GameView;
 }(eui.Component));
 __reflect(GameView.prototype, "GameView");
+window["GameView"] = GameView;
 //# sourceMappingURL=GameView.js.map
