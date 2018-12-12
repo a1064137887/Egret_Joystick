@@ -173,8 +173,18 @@ var Main = (function (_super) {
         Main._instance = this;
         Main.stageWid = this.stage.stageWidth;
         Main.stageHei = this.stage.stageHeight;
+        var bg = new eui.Image();
+        bg.source = "game_bg_png";
+        this.addChild(bg);
         this.gameView = new GameView();
         this.addChild(this.gameView);
+        // let joy = new Joystick();
+        // this.addChild(joy);
+        // joy.y = Main.stageHei - joy.height;
+        // let joy1 = new Joystick();
+        // this.addChild(joy1);
+        // joy1.x = Main.stageWid - joy1.width;
+        // joy1.y = Main.stageHei - joy1.height;
     };
     return Main;
 }(eui.UILayer));

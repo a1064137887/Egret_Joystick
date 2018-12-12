@@ -20,17 +20,30 @@ var GameView = (function (_super) {
     function GameView() {
         var _this = _super.call(this) || this;
         _this.skinName = "GameViewSkin";
+        _this.startPointL = new egret.Point();
+        _this.startPointR = new egret.Point();
         return _this;
     }
     GameView.prototype.createChildren = function () {
-        this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBegin, this);
+        // this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBegin, this);
+        _super.prototype.createChildren.call(this);
+        this.createJoystick();
     };
-    GameView.prototype.onTouchBegin = function (event) {
-        var touchPoint = new egret.Point(event.stageX, event.stageY);
-    };
-    GameView.prototype.onTouchMove = function () {
-    };
-    GameView.prototype.onTouchEnd = function () {
+    /** 创建摇杆 */
+    GameView.prototype.createJoystick = function () {
+        this.joystickL = new Joystick();
+        this.joystickR = new Joystick();
+        this.joystickL.width = Main.stageWid / 2;
+        this.joystickL.height = Main.stageHei;
+        this.addChild(this.joystickL);
+        this.joystickR.x = Main.stageWid / 2;
+        this.joystickR.width = Main.stageWid / 2;
+        this.joystickR.height = Main.stageHei;
+        this.addChild(this.joystickR);
+        var point = new egret.Point(50 + this.joystickL.joyGroup.anchorOffsetX, Main.stageHei - this.joystickL.joyGroup.height + this.joystickL.joyGroup.anchorOffsetY - 50);
+        this.joystickL.setJoyPosition(this.joystickL.globalToLocal(point.x, point.y));
+        point = new egret.Point(Main.stageWid - this.joystickR.joyGroup.anchorOffsetX - 50, this.joystickL.joyGroup.y);
+        this.joystickR.setJoyPosition(this.joystickR.globalToLocal(point.x, point.y));
     };
     return GameView;
 }(eui.Component));

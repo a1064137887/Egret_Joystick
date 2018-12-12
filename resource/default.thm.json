@@ -16,8 +16,8 @@
 	},
 	"autoGenerateExmlsList": true,
 	"exmls": [
-		"resource/eui_skins/game/JoystickSkin.exml",
-		"resource/eui_skins/game/GameViewSkin.exml"
+		"resource/eui_skins/game/GameViewSkin.exml",
+		"resource/eui_skins/game/JoystickSkin.exml"
 	],
 	"path": "resource/default.thm.json"
 }

@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <e:Skin class="GameViewSkin" width="1334" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:ns1="*" height="750">
 	<e:Image id="bg" x="658" y="373" source="game_bg_png" anchorOffsetX="1024" anchorOffsetY="1024"/>
-	<ns1:Joystick id="joystickL" skinName="JoystickSkin" anchorOffsetX="120.5" anchorOffsetY="121" x="170.5" y="579" alpha="0.3"/>
-	<ns1:Joystick id="joystickR" skinName="JoystickSkin" anchorOffsetX="120.5" anchorOffsetY="121" right="50" bottom="50" alpha="0.3"/>
 </e:Skin>
