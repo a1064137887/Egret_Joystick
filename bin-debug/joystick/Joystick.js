@@ -62,22 +62,19 @@ var Joystick = (function (_super) {
         this.joyMovePoint.x = event.stageX;
         this.joyMovePoint.y = event.stageY;
         var distance = egret.Point.distance(this.joyStartPoint, this.joyMovePoint);
-        // if(distance <= this.radius)//在半径内
-        // {
-        //     this.joystick.x = this.joyDefaultPoint.x + this.joyMovePoint.x - this.joyStartPoint.x;
-        //     this.joystick.y = this.joyDefaultPoint.y + this.joyMovePoint.y - this.joyStartPoint.y;
-        // }
-        // else//在半径外
-        // {
-        //     //joyStartPoint 和 joyMovePoint 是绝对坐标
-        //     let point = egret.Point.interpolate(this.joyStartPoint, this.joyMovePoint, this.radius / distance);
-        //     point = this.globalToLocal(point.x, point.y);
-        //     let tmpPoint = this.globalToLocal(this.joyStartPoint.x, this.joyStartPoint.y);
-        //     this.joystick.x = point.x - tmpPoint.x;
-        //     this.joystick.y = point.y - tmpPoint.y;
-        // }
-        this.joystick.x = this.joyDefaultPoint.x + this.joyMovePoint.x - this.joyStartPoint.x;
-        this.joystick.y = this.joyDefaultPoint.y + this.joyMovePoint.y - this.joyStartPoint.y;
+        if (distance <= this.radius) {
+            this.joystick.x = this.joyDefaultPoint.x + (this.joyMovePoint.x - this.joyStartPoint.x);
+            this.joystick.y = this.joyDefaultPoint.y + (this.joyMovePoint.y - this.joyStartPoint.y);
+        }
+        else {
+            //joyStartPoint 和 joyMovePoint 是绝对坐标
+            var point = egret.Point.interpolate(this.joyMovePoint, this.joyStartPoint, this.radius / distance);
+            // point = this.globalToLocal(point.x, point.y);
+            this.joystick.x = this.joyDefaultPoint.x + (point.x - this.joyStartPoint.x);
+            this.joystick.y = this.joyDefaultPoint.y + (point.y - this.joyStartPoint.y);
+        }
+        // this.joystick.x = this.joyDefaultPoint.x + this.joyMovePoint.x - this.joyStartPoint.x;
+        // this.joystick.y = this.joyDefaultPoint.y + this.joyMovePoint.y - this.joyStartPoint.y;
     };
     Joystick.prototype.onTouchOutside = function (event) {
         if (event.touchPointID != this.touchID)
@@ -108,4 +105,3 @@ var Joystick = (function (_super) {
 }(eui.Component));
 __reflect(Joystick.prototype, "Joystick");
 window["Joystick"] = Joystick;
-//# sourceMappingURL=Joystick.js.map

@@ -54,4 +54,3 @@ var GameView = (function (_super) {
 }(eui.Component));
 __reflect(GameView.prototype, "GameView");
 window["GameView"] = GameView;
-//# sourceMappingURL=GameView.js.map

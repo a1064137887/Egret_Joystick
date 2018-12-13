@@ -16,11 +16,12 @@ class Joystick extends eui.Component
     private joystick: eui.Image;
     private joystickBg: eui.Image;
 
-    private defaultAlpha: number;//默认透明度
-    private defaultPoint: egret.Point;//默认位置
-    private joyDefaultPoint: egret.Point;//摇杆的初始位置
-    private joyStartPoint: egret.Point;//开始触摸的位置
-    private joyMovePoint: egret.Point;//触摸移动时的位置
+    private defaultAlpha: number;//整个摇杆默认透明度
+    private defaultPoint: egret.Point;//整个摇杆默认位置
+
+    private joyDefaultPoint: egret.Point;//摇杆头的初始位置
+    private joyStartPoint: egret.Point;//摇杆头开始触摸的位置
+    private joyMovePoint: egret.Point;//摇杆头触摸移动时的位置
 
     public constructor()
     {
@@ -76,23 +77,18 @@ class Joystick extends eui.Component
         this.joyMovePoint.x = event.stageX;
         this.joyMovePoint.y = event.stageY;
         let distance = egret.Point.distance(this.joyStartPoint, this.joyMovePoint);
-        // if(distance <= this.radius)//在半径内
-        // {
-        //     this.joystick.x = this.joyDefaultPoint.x + this.joyMovePoint.x - this.joyStartPoint.x;
-        //     this.joystick.y = this.joyDefaultPoint.y + this.joyMovePoint.y - this.joyStartPoint.y;
-        // }
-        // else//在半径外
-        // {
-        //     //joyStartPoint 和 joyMovePoint 是绝对坐标
-        //     let point = egret.Point.interpolate(this.joyStartPoint, this.joyMovePoint, this.radius / distance);
-        //     point = this.globalToLocal(point.x, point.y);
-        //     let tmpPoint = this.globalToLocal(this.joyStartPoint.x, this.joyStartPoint.y);
-        //     this.joystick.x = point.x - tmpPoint.x;
-        //     this.joystick.y = point.y - tmpPoint.y;
-        // }
-
-        this.joystick.x = this.joyDefaultPoint.x + this.joyMovePoint.x - this.joyStartPoint.x;
-        this.joystick.y = this.joyDefaultPoint.y + this.joyMovePoint.y - this.joyStartPoint.y;
+        if(distance <= this.radius)//在半径内
+        {
+            this.joystick.x = this.joyDefaultPoint.x + (this.joyMovePoint.x - this.joyStartPoint.x);
+            this.joystick.y = this.joyDefaultPoint.y + (this.joyMovePoint.y - this.joyStartPoint.y);
+        }
+        else//在半径外
+        {
+            //joyStartPoint 和 joyMovePoint 是绝对坐标
+            let point = egret.Point.interpolate(this.joyMovePoint, this.joyStartPoint, this.radius / distance);
+            this.joystick.x = this.joyDefaultPoint.x + (point.x - this.joyStartPoint.x);
+            this.joystick.y = this.joyDefaultPoint.y + (point.y - this.joyStartPoint.y)
+        }
     }
 
     private onTouchOutside(event: egret.TouchEvent)
