@@ -91,7 +91,7 @@ class Joystick extends eui.Component
         let sinTheta = (this.joystick.x - this.joyDefaultPoint.x) / this.radius;
         let theta = Math.abs(Math.asin(sinTheta) * (180 / Math.PI));
         this.angle = this.verifyAngleOfQuadrant(this.xAxis, this.yAxis, theta);//[0, 360)
-        console.log("joystick :: offset = " + this.offset + "  xAxis = " + this.xAxis + "  yAxis = " + this.yAxis + "  angle = " + this.angle);
+        // console.log("joystick :: offset = " + this.offset + "  xAxis = " + this.xAxis + "  yAxis = " + this.yAxis + "  angle = " + this.angle);
     }
 
     private onTouchOutside(event: egret.TouchEvent)
@@ -116,6 +116,11 @@ class Joystick extends eui.Component
         this.touchEnabled = false;
         this.x = this.defaultPoint.x;
         this.y = this.defaultPoint.y;
+		//重置数据
+		this.xAxis = 0;
+		this.yAxis = 0;
+		this.offset = 0;
+		this.angle = 0;
 
         this.joystick.x = this.joyDefaultPoint.x;
         this.joystick.y = this.joyDefaultPoint.y;

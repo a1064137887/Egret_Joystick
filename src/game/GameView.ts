@@ -35,7 +35,7 @@ class GameView extends eui.Component
         if(touchPoint.x < Main.stageWid / 2)
         {
             if(this.joystickL.active) return;
-            console.log(" ===== onViewTouchBegin left ===== ");
+            // console.log(" ===== onViewTouchBegin left ===== ");
             this.joystickL.x = touchPoint.x;
             this.joystickL.y = touchPoint.y;
             this.joystickL.alpha = 1;
@@ -44,7 +44,7 @@ class GameView extends eui.Component
         else 
         {
             if(this.joystickR.active) return;
-            console.log(" ===== onViewTouchBegin right ===== ");
+            // console.log(" ===== onViewTouchBegin right ===== ");
             this.joystickR.x = touchPoint.x;
             this.joystickR.y = touchPoint.y;
             this.joystickR.alpha = 1;
