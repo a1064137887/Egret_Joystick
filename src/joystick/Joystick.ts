@@ -167,7 +167,7 @@ class Joystick extends eui.Component
         {
             return 270;
         }
-        return 0;
+        return this.angle;
     }
 
 
